@@ -6,7 +6,8 @@ const employeeTestSchema = new Schema({
     testBarcode: {type: String , required: true, unique: true, trim: true},
     employeeID: { type: Schema.ObjectId, ref: 'Employee' },
     collectionTime: {type: Date, required: true},
-    collectedBy: { type: Schema.ObjectId, ref: 'LabEmployee' }
+    collectedBy: { type: Schema.ObjectId, ref: 'LabEmployee' },
+    result: {type: String, default: "In Progress"}
 },{
     timestamps : true,
 });
