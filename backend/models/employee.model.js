@@ -9,7 +9,7 @@ const employeeSchema = new Schema({
     lastName: {type: String , required: true, trim: true},
     password: {type: String , required: true, trim: true},
 },{
-    timestamps = true,
+    timestamps : true,
 });
 
 const Employee = mongoose.model('Employee', employeeSchema);
