@@ -8,6 +8,7 @@ const employeeSchema = new Schema({
     firstName: {type: String , required: true, trim: true},
     lastName: {type: String , required: true, trim: true},
     password: {type: String , required: true, trim: true},
+    testsTaken: [{ type: Schema.ObjectId, ref: 'EmployeeTest' }]
 },{
     timestamps : true,
 });
