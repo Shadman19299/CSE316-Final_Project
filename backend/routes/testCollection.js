@@ -17,40 +17,42 @@ testCollectionRouter.route('/').post((req, res) => {
     });
   
     newTest.save()
-    .then((test) => {
-        res.json('New Test added!');
-        let testID =  test['_id'];
+    .then(() => {
+        res.write('New test added');
         Employee.findOne({employeeID: employeeID})
             .then(employee => {
-                Employee.findOneAndUpdate({ _id: employee["_id"]}, { $push: { testsTaken: testID } }).exec();
+                Employee.findOneAndUpdate({ _id: employee["_id"]}, { $push: { testsTaken: barcode } }).exec();
+                res.end();
             })
             .catch(err => res.status(400).json('Error: ' + err));
     })
     .catch(err => res.status(400).json('Error: ' + err));
-
-    
 });
 
 
 testCollectionRouter.route('/').delete((req, res) => {
-    const list = req.body
-    list.map(object =>{
-        const employeeID = object.employee;
-        const barcode = object.testBarcode;
+    const employeeID = req.body.employee;
+    const barcode = req.body.testBarcode;
 
-        Employee.find({employeeID : employeeID}).then(employee => {
+    Employee.findOne({employeeID : employeeID})
+        .then(employee => {
             employee.testsTaken = employee.testsTaken.filter(codes => codes != barcode)
-    
             employee.save()
-              .then(() => res.json('Employee updated!'))
-              .catch(err => res.status(400).json('Error: ' + err));
-        })
+                .then(() => {
+                    res.write('Employee updated!');
+                    EmployeeTest.deleteOne({testBarcode: barcode})
+                        .then(() => {
+                            res.write('Test deleted.');
+                            res.end();
+                        })
+                        .catch(err => res.status(400).json('Error: ' + err));
 
-        employeeTest.deleteOne({testBarcode: barcode})
-            .then(() => res.json('Test deleted.'))
-            .catch(err => res.status(400).json('Error: ' + err));
-    })
+                })
+                .catch(err => res.status(400).json('Error: ' + err));
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
 });
+
 
 testCollectionRouter.route('/').get((req, res) =>{
     EmployeeTest.find({}, 'testBarcode employeeID')
