@@ -22,11 +22,13 @@ const employeeHomeRouter = require('./routes/employeeHome');
 const employeeLoginRouter = require('./routes/employeeLogin');
 const loginOneRouter = require('./routes/loginPageOne')
 const testCollectionRouter = require('./routes/testCollection');
+const employeeRouter = require('./routes/employee')
 
 app.use('/employeeHome', employeeHomeRouter);
 app.use('/employeeLogin', employeeLoginRouter);
 app.use('/loginOne', loginOneRouter);
 app.use('/testCollection', testCollectionRouter);
+app.use('/employeeRegister', employeeRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

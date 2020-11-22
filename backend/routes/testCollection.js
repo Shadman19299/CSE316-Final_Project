@@ -7,6 +7,7 @@ testCollectionRouter.route('/').post((req, res) => {
     const employeeID = req.body.employeeID;
     const barcode = req.body.testBarcode;
     var date = new Date();
+    var result = "In Progress"
 
     const newTest = new EmployeeTest({
         testBarcode: barcode,
