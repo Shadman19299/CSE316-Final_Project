@@ -1,29 +1,33 @@
-const router = require('express').Router();
+const employeeRouter = require('express').Router();
 let Employee = require('../models/employee.model');
 
-router.route('/').get((req, res) => {
-  Employee.find()
-    .then(employees => res.json(employees))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-
-// router.route('/add').post((req, res) => {
-//     const username = req.body.username;
-//     const description = req.body.description;
-//     const duration = Number(req.body.duration);
-//     const date = Date.parse(req.body.date);
-  
-//     const newExercise = new Exercise({
-//       username,
-//       description,
-//       duration,
-//       date,
-//     });
-  
-//     newExercise.save()
-//     .then(() => res.json('Exercise added!'))
+// employeeRouter.route('/').get((req, res) => {
+//   Employee.find()
+//     .then(employees => res.json(employees))
 //     .catch(err => res.status(400).json('Error: ' + err));
 // });
+
+employeeRouter.route('/').post((req, res) => {
+    const employeeID = req.body.employeeID;
+    const email = req.body.email;
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const password = req.body.password;
+    const testsTaken = []
+  
+    const newEmployee = new Employee({
+      employeeID,
+      email,
+      firstName,
+      lastName,
+      password,
+      testsTaken
+    });
+  
+    newEmployee.save()
+    .then(() => res.json('Employee added!'))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
   
 // router.route('/:id').get((req, res) => {
 //     Exercise.findById(req.params.id)
@@ -53,4 +57,4 @@ router.route('/').get((req, res) => {
 // });
   
 
-module.exports = router;
+module.exports = employeeRouter;

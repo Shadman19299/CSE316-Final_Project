@@ -7,30 +7,47 @@ testCollectionRouter.route('/').post((req, res) => {
     const employeeID = req.body.employeeID;
     const barcode = req.body.testBarcode;
     var date = new Date();
+    var result = "In Progress"
 
     const newTest = new EmployeeTest({
-        barcode,
-        employeeID,
-        date
+        testBarcode: barcode,
+        employeeID: employeeID,
+        collectionTime: date,
+        result: result
     });
   
     newTest.save()
-    .then(() => res.json('New Test added!'))
-    .catch(err => res.status(400).json('Error: ' + err));
+    .then(() => res.write('New Test added!'))
+    .catch(err => res.status(400).json('Error 21: ' + err));
 
     let testID;
-    EmployeeTest.find({testBarcode : barcode}).then(test => {testID = test['_id']});
+    EmployeeTest.find({testBarcode : barcode})
+                .then(test => {
+                    testID = test._id
 
+                    Employee.findOne({employeeID: employeeID})
+                    .then(employee => {
+                        if(typeof employee.testsTaken == 'undefined'){
+                            console.log('came to undefined')
+                            console.log(employee)
+                            employee.testsTaken = [testID];
+                        }
+                        else{
+                            console.log('came to defined')
+                            console.log(employee)
+                            console.log(employee.testsTaken)
+                            employee.testsTaken.push(testID);
+                        }
 
-    Employee.findById(employeeID)
-      .then(employee => {
-        employee.testsTaken.push(testID);
-  
-        employee.save()
-          .then(() => res.json('Employee updated!'))
-          .catch(err => res.status(400).json('Error: ' + err));
-      })
-      .catch(err => res.status(400).json('Error: ' + err));
+                        employee.save()
+                        .then(() => res.write('Employee updated!'))
+                        .catch(err => console.log('Error 44: ' + err));
+                        res.end();
+                    })
+                    .catch(err => console.log('Error 46: ' + err));
+                })
+                .catch(err => console.log('Error 48: ' + err));
+
 });
 
 
