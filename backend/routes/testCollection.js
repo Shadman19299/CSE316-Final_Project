@@ -9,28 +9,25 @@ testCollectionRouter.route('/').post((req, res) => {
     var date = new Date();
 
     const newTest = new EmployeeTest({
-        barcode,
-        employeeID,
-        date
+        testBarcode: barcode,
+        employeeID: employeeID, 
+        collectionTime: date,
+        result: "In Progress"
     });
   
     newTest.save()
-    .then(() => res.json('New Test added!'))
+    .then((test) => {
+        res.json('New Test added!');
+        let testID =  test['_id'];
+        Employee.findOne({employeeID: employeeID})
+            .then(employee => {
+                Employee.findOneAndUpdate({ _id: employee["_id"]}, { $push: { testsTaken: testID } }).exec();
+            })
+            .catch(err => res.status(400).json('Error: ' + err));
+    })
     .catch(err => res.status(400).json('Error: ' + err));
 
-    let testID;
-    EmployeeTest.find({testBarcode : barcode}).then(test => {testID = test['_id']});
-
-
-    Employee.findById(employeeID)
-      .then(employee => {
-        employee.testsTaken.push(testID);
-  
-        employee.save()
-          .then(() => res.json('Employee updated!'))
-          .catch(err => res.status(400).json('Error: ' + err));
-      })
-      .catch(err => res.status(400).json('Error: ' + err));
+    
 });
 
 
