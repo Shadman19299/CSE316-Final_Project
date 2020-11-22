@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const wellTestingSchema = new Schema({
-    poolBarcode: { type: Schema.ObjectId, ref: 'PoolMap' },
+    poolBarcode: { type: String, trim: true },
     wellBarcode:  {type: String , required: true, unique: true, trim: true},
     testingStartTime: {type: Date, required: true},
     testingEndTime: {type: Date, required: true},

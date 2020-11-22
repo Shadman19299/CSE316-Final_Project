@@ -24,6 +24,7 @@ const loginOneRouter = require('./routes/loginPageOne')
 const testCollectionRouter = require('./routes/testCollection');
 const employeeRouter = require('./routes/employee');
 const poolMappingRouter = require('./routes/poolMapping');
+const wellTestingRouter = require('./routes/wellTesting');
 
 app.use('/employeeHome', employeeHomeRouter);
 app.use('/employeeLogin', employeeLoginRouter);
@@ -31,6 +32,7 @@ app.use('/loginOne', loginOneRouter);
 app.use('/testCollection', testCollectionRouter);
 app.use('/employeeRegister', employeeRouter);
 app.use('/poolMap', poolMappingRouter);
+app.use('/wellTesting', wellTestingRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
