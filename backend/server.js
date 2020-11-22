@@ -19,8 +19,14 @@ connection.once('open', () => {
 })
 
 const employeeHomeRouter = require('./routes/employeeHome');
+const employeeLoginRouter = require('./routes/employeeLogin');
+const loginOneRouter = require('./routes/loginPageOne')
+const testCollectionRouter = require('./routes/testCollection');
 
 app.use('/employeeHome', employeeHomeRouter);
+app.use('/employeeLogin', employeeLoginRouter);
+app.use('/loginOne', loginOneRouter);
+app.use('/testCollection', testCollectionRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

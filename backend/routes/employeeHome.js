@@ -2,7 +2,7 @@ const employeeHomeRouter = require('express').Router();
 let Employee = require('../models/employee.model');
 let EmployeeTest = require('../models/employeeTest.model');
 
-router.route('/:employeeID').get((req, res) => {
+employeeHomeRouter.route('/:employeeID').get((req, res) => {
     Employee.findOne({employeeID : req.params.employeeID})
         .then(employee => {
             let list = [];
