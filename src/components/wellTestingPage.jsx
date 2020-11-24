@@ -33,7 +33,7 @@ class WellTestingPage extends Component {
     }
 
     onDeleteHandler = ()=>{
-        axios.delete('/wellTesting' , this.state.checkedList)
+        axios.delete('/wellTesting' , {data: this.state.checkedList})
         .then(() => {
             this.setState({checkedList : []});
         })
@@ -57,7 +57,7 @@ class WellTestingPage extends Component {
             let newWellsList = this.state.wells.filter((well) => well.wellBarcode !== this.state.checkedList[0]);
             axios.post('/wellTesting/getOne', {"wellBarcode" : this.state.checkedList[0]})
                 .then(response => {
-                    axios.delete('/wellTesting', { data: temp })
+                    axios.delete('/wellTesting', {data : temp})
                         .then()
                         .catch(function (error) {
                             console.log(error);
