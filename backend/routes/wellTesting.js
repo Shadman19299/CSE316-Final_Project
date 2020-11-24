@@ -77,5 +77,12 @@ wellTestingRouter.route('/').put((req, res) => {
 
 });
 
+wellTestingRouter.route('/getOne').post((req, res) => {
+    WellTesting.findOne({wellBarcode: req.body.wellBarcode})
+        .then(well => {
+            res.json(well);
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
+});
 
 module.exports = wellTestingRouter;
