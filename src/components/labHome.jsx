@@ -5,18 +5,21 @@ class LabHome extends Component {
     state = {}
     render() {
         return (<div className="Buttons">
-            <title> LAB HOME PAGE </title>
+            <h1 style={{textAlign: 'center', fontSize: 20, backgroundColor: 'LightBlue'}}> LAB HOME </h1>
             <NavLink to="/poolMappingPage">
-                <Button variant="link" size="lg" block>
+                <Button variant="secondary" size="lg" block style={{marginTop: 20, fontSize:30, backgroundColor:'Rose', fontFamily:'initial'}}>
                     Pool Mapping
-  </Button></NavLink>
+                </Button>
+            </NavLink>
+            
             <NavLink to="/wellTestingPage">
-                <Button variant="" size="lg" block>
+                <Button variant="secondary" size="lg" block style={{marginTop: 20, fontSize:30, backgroundColor:'Rose', fontFamily:'initial'}}>
                     Well Testing
-  </Button>
+                </Button>
             </NavLink>
         </div>);
     }
 }
+
 
 export default LabHome;
