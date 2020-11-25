@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios'
 import {Form, Button} from 'react-bootstrap'
 
-import ReactDOM from 'react-dom';
-import WellTestingPage from './wellTestingPage';
-
 class LoginPage extends Component {
     state = { 
         email: '',
@@ -27,7 +24,7 @@ class LoginPage extends Component {
         axios.get('/loginOne/'+email+'/'+password)
             .then(response => {
                 if(response.data.isValid === 'valid'){
-                    window.location = '/wellTestingPage'
+                    window.location = '/testCollectionPage'
                 }
                 else{
                     alert("Invalid Email or Password");
@@ -73,10 +70,10 @@ class LoginPage extends Component {
                         <Form.Control type="password" placeholder="Password" name="password" onChange={this.onPasswordChange}/>
                     </Form.Group>
                     
-                    <Button className="mr-3" variant="primary" type="submit" onClick={this.submitCollector}>
+                    <Button className="mr-3" variant="secondary" type="submit" onClick={this.submitCollector}>
                         Login Collector
                     </Button>
-                    <Button variant="primary" type="submit" onClick={this.submitLab}>
+                    <Button variant="secondary" type="submit" onClick={this.submitLab}>
                         Lab Login
                     </Button>
                 </Form>
