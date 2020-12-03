@@ -8,7 +8,7 @@ class WellTestingPage extends Component {
         poolBarcode: '',
         result: 'In Progess',
         wells: [],
-        checkedList: [],
+        checkedList: []
     }
 
     componentDidMount = ()=>{
