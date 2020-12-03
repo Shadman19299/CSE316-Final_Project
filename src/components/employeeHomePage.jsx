@@ -8,45 +8,48 @@ import Table from 'react-bootstrap/Table';
 class EmployeeHomePage extends Component {
     
     state = { 
-        //employeeID :this.props.match.params.employeeID,
-        date:[], 
-        result:[]
+        data:[]
           }
     
     componentDidMount= () =>{
         axios.get('/employeeHome/'+this.props.match.params.employeeID)
             .then(res => {
-                console.log(res.data)
-                console.log(this.props.match.params.employeeID)
-                this.setState({date: res.data})
+                //console.log(this.props.match.params.employeeID)
+                this.setState({data: res.data})
+                //console.log(res.data[0].date)
                 //this.setState({date:res.data})
             })
         
     }
-      
+    
+    renderTableData() {
+        return this.state.data.map((data, index) => {
+           let { date, result } = data //destructuring
+           date = new Date(date)
+           return (
+              <tr key={date}>
+                  <td>{date.getUTCFullYear()+"-"+ (date.getMonth()+1)+"-"+date.getDate()}</td>
+                 <td>{result}</td> 
+              </tr>
+           )
+        })
+     }
+    
     render() { 
-        //this.getData();
-        //const 
+        
         return(
             
-            <div>
+            <div className="container" style={{ marginTop: "5px"}}>
             <h1>Employee Home Page</h1>
-              <h2> {this.state.date} </h2>
-
-            <Table striped bordered hover >
-                <thead>
+                <Table striped bordered hover>
+                    <tbody>
                     <tr>
-                        <th>Collection Date</th>
-                        <th>Result</th>
+                    <th>Date</th>
+                    <th>Result</th>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr>
-        <td>{this.state.date}</td>
-                        <td>pos</td>
-                    </tr>
-                </tbody>
-            </Table>
+                        {this.renderTableData()}
+                    </tbody>
+                </Table>
             </div>);
     }
 }

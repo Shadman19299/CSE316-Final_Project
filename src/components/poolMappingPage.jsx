@@ -83,12 +83,12 @@ class PoolMappingPage extends Component{
         this.setState({inputs : newInputs});
     }
 
-    onEditHandler = () =>{
-        let barcodesList = this.state.testBarcodes;
-        for(let i = 0; i < barcodesList.length; i++){
-            barcodesList[i].bar
-        }
-    }
+    // onEditHandler = () =>{
+    //     let barcodesList = this.state.testBarcodes;
+    //     for(let i = 0; i < barcodesList.length; i++){
+    //         barcodesList[i].bar
+    //     }
+    // }
 
 
     render() { 
