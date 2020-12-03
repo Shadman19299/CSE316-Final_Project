@@ -6,8 +6,8 @@ employeeHomeRouter.route('/:employeeID').get((req, res) => {
     Employee.findOne({employeeID : req.params.employeeID})
         .then(employee => {
             let list = [];
-            employee.testsTaken.map(testsID => {
-                EmployeeTest.findById(testsID)
+            employee.testsTaken.map(testsID => { 
+                EmployeeTest.findOne({testBarcode: testsID})//change findbyid to findone and testBarcode//
                             .then(tests => list.push({
                                                      date : tests.collectionTime,
                                                      result : tests.result
