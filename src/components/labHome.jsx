@@ -1,12 +1,27 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, ButtonGroup } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 class LabHome extends Component {
     state = {}
     render() {
         return (<div className="Buttons">
-            <h1 style={{textAlign: "center", marginBottom: "20px"}}> LAB HOME </h1>
-            <table align= "center">
+            <h1 style={{textAlign: "center", marginBottom: "3%", marginTop: "5%"}}> Lab Home </h1>
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <ButtonGroup vertical>
+                    <NavLink to="/poolMappingPage">
+                        <Button variant="secondary" className="mb-3" size='lg' style={{width:300}}>
+                            Pool Mapping
+                        </Button>
+                    </NavLink>
+                
+                    <NavLink to="/wellTestingPage">
+                        <Button variant="secondary" className="mb-3" size='lg' style={{width:300}}>
+                            Well Testing
+                        </Button>
+                    </NavLink>
+                </ButtonGroup>
+            </div>
+            {/* <table align= "center">
                 <tr align='center'>
             <NavLink to="/poolMappingPage">
                 <Button variant="secondary" size="lg"  style={{padding:20, textAlign: "center", marginBottom: "20px", fontSize:30, fontFamily:'initial'}}>
@@ -16,12 +31,12 @@ class LabHome extends Component {
                 </tr>
                 <tr align='center'>
             <NavLink to="/wellTestingPage">
-                <Button variant="secondary" size="lg"  style={{padding:20,textAlign: "center", marginBottom: "20px", fontSize:30,fontFamily:'initial'}}>
+                <Button variant="secondary" size="lg"  style={{padding:20,textAlign: "center", marginBottom: "20px", fontSize:30, fontFamily:'initial'}}>
                     Well Testing
                 </Button>
             </NavLink>
             </tr>
-            </table>
+            </table> */}
         </div>);
     }
 }
