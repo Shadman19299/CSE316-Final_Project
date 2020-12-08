@@ -33,7 +33,7 @@ poolMappingRouter.route('/edit').put((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-poolMappingRouter.route('/getOne').get((req, res) => {
+poolMappingRouter.route('/getOne').post((req, res) => {
     PoolMap.findOne({poolBarcode: req.body.poolBarcode})
         .then(pool => {
             res.json(pool);

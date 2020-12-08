@@ -23,6 +23,54 @@ class PoolMappingPage extends Component{
         })
     }
 
+    onTestBarcodeChange = (id, event) =>{
+        let newObj = {
+            "id": id,
+            "barcode": event.target.value
+        }
+
+        let newList = this.state.testBarcodes.filter((obj)=> obj.id !== id );
+
+        newList.push(newObj);
+        this.setState({testBarcodes: newList});
+    }
+
+    onAddRow = () =>{
+        let newInput = `input-${this.state.inputCounter}`;
+        let newObj = {
+            "id": newInput,
+            "barcode": ''
+        }
+        let newCounter = this.state.inputCounter + 1
+        this.setState({ inputs: this.state.inputs.concat(newInput),
+                        testBarcodes: this.state.testBarcodes.concat(newObj),
+                        inputCounter: newCounter });
+    }
+
+    onDeleteInputs = (input) =>{
+        let newInputs = this.state.inputs.filter(someInput => input !== someInput);
+        let newBarcodeList = this.state.testBarcodes.filter((obj)=> obj.id !== input);
+        this.setState({inputs : newInputs, testBarcodes: newBarcodeList});
+    }
+
+    onSubmitHandler = ()=>{
+        let newTestBarcodes = []
+        this.state.testBarcodes.map(obj => newTestBarcodes.push(obj.barcode));
+
+        axios.post('/poolMap' , { poolBarcode: this.state.poolBarcode, testBarcode: newTestBarcodes})
+        .then(() => {
+            axios.get('/poolMap')
+            .then(response => {
+                this.setState({poolBarcode: '', testBarcodes: [], inputs:[], inputCounter: 0, pools: response.data});
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+    }
 
     onCheckBoxChange = (event, poolBarcode)=> {
         if(event.target.checked){
@@ -38,58 +86,67 @@ class PoolMappingPage extends Component{
     onDeleteHandler = ()=>{
         axios.delete('/poolMap' , {data: this.state.checkedList})
         .then(() => {
-            this.setState({checkedList : []});
+            axios.get('/poolMap')
+            .then(response => {
+                this.setState({pools : response.data, checkedList : []});
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
         })
         .catch(function (error) {
             console.log(error);
         })
-
-        axios.get('/poolMap')
-        .then(response => {
-            this.setState({pools : response.data});
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
     }
 
-    onTestBarcodeChange = (id, event) =>{
-        let newObj = {
-            "id": id,
-            "barcode": event.target.value
+    onEditHandler = () =>{
+        //update all the states to include only information regarding the selected pool
+        if(this.state.checkedList.length === 1){
+            let temp = [this.state.checkedList[0]]
+            
+            let newPoolList = this.state.pools.filter((pool) => pool.poolBarcode !== this.state.checkedList[0]);
+            axios.post('/poolMap/getOne', {"poolBarcode" : this.state.checkedList[0]})
+                .then(response => {
+                    axios.delete('/poolMap', {data : temp})
+                        .then(()=>{
+                            let newInputList= [];
+                            let newTestBarcodes= [];
+                            let i = 0;
+                            response.data.testBarcode.map(barcode =>{    
+                                let newInput = `input-${i}`;
+                                let newObj = {
+                                    "id": newInput,
+                                    "barcode": barcode
+                                }
+                                newInputList.push(newInput);
+                                newTestBarcodes.push(newObj);
+                                i = i+1;
+                                return barcode;
+                            });
+
+                            this.setState({ poolBarcode : response.data.poolBarcode,
+                                pools: newPoolList,
+                                testBarcodes: newTestBarcodes,
+                                checkedList: [],
+                                inputs: newInputList,
+                                inputCounter: response.data.testBarcode.length});
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
         }
-
-        let newList = this.state.testBarcodes;
-
-        for(let i = 0; i < newList.length; i++){
-            if(newList[i].id === id){
-                newList = newList.filter((obj)=> obj.id !== id );
-            }
+        else{
+            alert('Select only one item to edit!')
         }
-
-        newList.push(newObj);
-        this.setState({testBarcodes: newList});
     }
 
-    appendInput = () =>{
-        let newInput = `input-${this.state.inputCounter}`;
-        let newCounter = this.state.inputCounter + 1
-        this.setState({ inputs: this.state.inputs.concat(newInput),
-                        inputCounter: newCounter });
+    onPoolBarcodeChange = (event)=>{
+        this.setState({poolBarcode : event.target.value});
     }
-
-    onDeleteInputs = (input) =>{
-        let newInputs = this.state.inputs.filter(someInput => input !== someInput);
-        this.setState({inputs : newInputs});
-    }
-
-    // onEditHandler = () =>{
-    //     let barcodesList = this.state.testBarcodes;
-    //     for(let i = 0; i < barcodesList.length; i++){
-    //         barcodesList[i].bar
-    //     }
-    // }
-
 
     render() { 
         return ( 
@@ -101,7 +158,7 @@ class PoolMappingPage extends Component{
                         <b>Pool Barcode:</b>
                         </Form.Label>
                         <Col sm={6}>
-                        <Form.Control type="text" defaultValue={this.state.poolBarcode} onChange={this.onPoolBarcodeChange}/>
+                        <Form.Control type="text" defaultValue={this.state.poolBarcode} onChange={(event) => this.onPoolBarcodeChange(event)}/>
                         </Col>
                     </Form.Group>
 
@@ -111,28 +168,27 @@ class PoolMappingPage extends Component{
                         </Form.Label>
                         <Col sm={6}>
                         {this.state.inputs.map(input => 
-                        
-                        <InputGroup key={input} className="mb-3">
-                            <FormControl
-                            type="text"
-                            placeholder=""
-                            aria-label="Recipient's username"
-                            aria-describedby="basic-addon2"
-                            onChange={(event) => {this.onTestBarcodeChange(input, event)} }
-                            />
-                            <InputGroup.Append>
-                            <Button variant="outline-secondary" onClick={() => this.onDeleteInputs(input)}>Delete</Button>
-                            </InputGroup.Append>
-                        </InputGroup>
+                            <InputGroup key={input} className="mb-3">
+                                <FormControl
+                                type="text"
+                                defaultValue= {this.state.testBarcodes.filter(barcodeOBJ=> barcodeOBJ.id === input)[0].barcode}
+                                aria-label="Recipient's username"
+                                aria-describedby="basic-addon2"
+                                onChange={(event) => {this.onTestBarcodeChange(input, event)} }
+                                />
+                                <InputGroup.Append>
+                                <Button variant="outline-secondary" onClick={() => this.onDeleteInputs(input)}>Delete</Button>
+                                </InputGroup.Append>
+                            </InputGroup>
                         )}
-                        <Button variant="secondary" onClick={this.appendInput}>Add Row</Button>
+                        <Button variant="secondary" onClick={this.onAddRow}>Add Row</Button>
                         </Col>
                     </Form.Group>
                         
 
                     <Form.Group as={Row}>
                         <Col sm={{ span: 6, offset: 3 }}>
-                        <Button variant="secondary" onClick={this.onAddHandler}>Submit Pool</Button>
+                        <Button variant="secondary" onClick={this.onSubmitHandler}>Submit Pool</Button>
                         </Col>
                     </Form.Group>
                 </Form>
