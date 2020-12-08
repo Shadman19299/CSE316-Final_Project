@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import axios from "axios";
-//import employeeID from './employeeLoginPage';
 import Table from 'react-bootstrap/Table';
 
-//import {useTable} from 'react-table';
 
 class EmployeeHomePage extends Component {
     
@@ -14,10 +12,7 @@ class EmployeeHomePage extends Component {
     componentDidMount= () =>{
         axios.get('/employeeHome/'+this.props.match.params.employeeID)
             .then(res => {
-                //console.log(this.props.match.params.employeeID)
                 this.setState({data: res.data})
-                //console.log(res.data[0].date)
-                //this.setState({date:res.data})
             })
         
     }
